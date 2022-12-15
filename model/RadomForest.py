@@ -86,7 +86,7 @@ class ClassifyModel():
         for i, name in enumerate(X_test.columns.values):
             i2name_x.append(name)
         dataSet = DataSet(X_test, None, i2name_x, None)
-        predList = model.valid(dataSet)
+        predList = self.valid(dataSet)
         return predList
 
     def train(self, trainSet):
