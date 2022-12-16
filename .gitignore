@@ -1,4 +1,5 @@
 .idea/
+model/__pycache__
 data/extra/
 data/extra_feature_v0.csv
 data/OnlineNewsPopularity.csv
