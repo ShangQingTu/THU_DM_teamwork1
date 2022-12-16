@@ -101,6 +101,7 @@ class ClassifyModel():
         :param validSet:DataSet  需要用于测试的集合的X
         :return: list 预测的结果
         """
+        random.seed(1453)
         col2name_x = validSet.col2name_x
         x_data = validSet.x_data
         predList = [self.model.pridict(col2name_x, row) for row in x_data]
@@ -291,7 +292,7 @@ class RadomForest():
         try:
             valueOfFeat = secondDict[key]
         except Exception:
-            return [-1]
+            return [random.randint(0, 1)]
         if isinstance(valueOfFeat, dict):
             predLabel = self.pridict_by_one_tree(valueOfFeat, col2name_x, testVec)
         else:
@@ -316,7 +317,7 @@ class RadomForest():
 
 
 if __name__ == '__main__':
-    #　样例
+    # 　样例
     X_train = pd.DataFrame({"feature1": [0, 1, 0], "feature2": [1, 1, 0]})
     X_test = pd.DataFrame({"feature1": [0, 1], "feature2": [1, 1]})
     Y_train = pd.DataFrame({"label": [1, 0, 1]})
