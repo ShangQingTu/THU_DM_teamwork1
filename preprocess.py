@@ -143,6 +143,28 @@ def preprocess(args):
     _df.to_csv("./data/origin_feature.csv", index=False)
 
 
+def merge():
+    extra_features = []
+    author2id = {}
+    for i in tqdm(range(39644)):
+        # 读取
+        extra_json_path = f"./data/extra/{i}.json"
+        with open(extra_json_path, 'r') as fin:
+            extra_feature = json.load(fin)
+            author = extra_feature["author"]
+            # 处理author
+            try:
+                author_id = author2id[author]
+            except KeyError:
+                author2id[author] = len(author2id)
+                author_id = author2id[author]
+            extra_feature["author_id"] = author_id
+            extra_features.append(extra_feature)
+    # save
+    ef_df = pd.DataFrame(extra_features).drop(columns=['author'])
+    ef_df.to_csv("./data/extra_feature.csv", index=False)
+
+
 def analyse():
     pass
 
@@ -151,9 +173,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Preprocess and analyse data for news popularity')
     parser.add_argument('--restart', help='重启的位置', default=12347)
     parser.add_argument('--task', help='任务类型', default='preprocess',
-                        choices=['preprocess', 'analyse'])
+                        choices=['preprocess', 'merge', 'analyse'])
     args = parser.parse_args()
     if args.task == 'preprocess':
         preprocess(args)
-    elif args.task == 'preprocess':
+    elif args.task == 'merge':
+        merge()
+    elif args.task == 'analyse':
         analyse()
