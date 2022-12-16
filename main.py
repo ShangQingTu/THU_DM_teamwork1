@@ -43,19 +43,19 @@ def main(args):
         #                     max_iter=args['epoch'], momentum=args['momentum'], shuffle=True)#用于单模型实现
         grid = MLPClassifier(hidden_layer_sizes=(876,876,512), activation='relu', max_iter=args['epoch'], shuffle=True)
         param_dist = {
-                'learning_rate_init':np.linspace(0.01*args['lr'],2*args['lr'],100),
-                'momentum':np.linspace(0.01*args['momentum'],2*args['momentum'],100),
+                'learning_rate_init':np.linspace(0.01*args['lr'],2*args['lr'],10),
+                'momentum':np.linspace(0.01*args['momentum'],2*args['momentum'],10),
                 }
-        clf = RandomizedSearchCV(grid, param_dist, cv = 3,n_iter=100,n_jobs = -1)
+        clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
     elif args['model_name'] == 'rdf':
         clf = ClassifyModel(tree_num=args['n_estimators'])
         # clf = RandomForestClassifier(n_estimators=args['n_estimators'])
 
-        grid = ClassifyModel()
-        param_dist = {
-                'n_estimators':range(int(0.5*args['n_estimators']),2*args['n_estimators'],4),
-                }
-        clf = RandomizedSearchCV(grid, param_dist, cv = 3,n_iter=100,n_jobs = -1)
+        # grid = ClassifyModel()
+        # param_dist = {
+        #         'n_estimators':range(int(0.5*args['n_estimators']),2*args['n_estimators'],4),
+        #         }
+        # clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
     elif args['model_name'] == 'xgb':
         # clf = XGBClassifier(n_estimators=args['n_estimators'], n_jobs=-1,  )#用于单模型实现
         grid = XGBClassifier(n_estimators=args['n_estimators'], n_jobs=-1,  )
@@ -63,11 +63,8 @@ def main(args):
                 'n_estimators':range(int(0.5*args['n_estimators']),2*args['n_estimators'],4),
                 'max_depth':range(2,15,1),
                 'learning_rate':np.linspace(0.01,2,20),
-                'subsample':np.linspace(0.7,0.9,20),
-                'colsample_bytree':np.linspace(0.5,0.98,10),
-                'min_child_weight':range(1,9,1)
                 }
-        clf = RandomizedSearchCV(grid, param_dist, cv = 3,n_iter=100,n_jobs = -1)
+        clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
     elif args['model_name'] == 'svm':
         # clf = svm.SVC(C=args['c'])#用于单模型实现
         grid = svm.SVC(C=args['c'])
@@ -76,22 +73,22 @@ def main(args):
                 'C': [0.001, 0.01, 1, 10, 100],
                 'gamma': [0.001, 0.01, 1, 10, 100]
                 }
-        clf = RandomizedSearchCV(grid, param_dist, cv = 3,n_iter=10,n_jobs = -1)
+        clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
     elif args['model_name'] == 'knn':
-        clf = KNeighborsClassifier(n_neighbors=args['k'])
+        # clf = KNeighborsClassifier(n_neighbors=args['k'])#用于单模型实现
         grid = KNeighborsClassifier()
         param_dist = {
                 "weights":["uniform", "distance"],
                 "n_neighbors":range(2,15,1)
                 }
-        clf = RandomizedSearchCV(grid, param_dist, cv = 3,n_iter=10,n_jobs = -1)
+        clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
         
     clf.fit(X_train, Y_train)
     Y_result = clf.predict(X_test)
     print(clf.best_estimator_)
-
+    print(clf.best_params_)
     
-    import pdb;pdb.set_trace()
+    # import pdb;pdb.set_trace()
     return mean_squared_error(Y_test,Y_result), roc_auc_score(Y_test, Y_result), f1_score(Y_test, Y_result)
     
 
