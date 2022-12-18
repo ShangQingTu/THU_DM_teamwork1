@@ -20,6 +20,7 @@ import seaborn as sns
 import torch
 
 from model.RadomForest import ClassifyModel
+#用于分类模型
 def main(args):
 
 
@@ -34,17 +35,17 @@ def main(args):
 
     label = pd.read_csv('data/label.csv', encoding='utf-8')
     # data_Y = np.array(label)
-    data_Y = pd.DataFrame(label)
+    data_Y = pd.DataFrame(label['label'])
     Y_train = data_Y[:train_id]
     Y_test = data_Y[train_id:]
-
+    # import pdb;pdb.set_trace()
     if args['model_name'] == 'mlp':
         # clf = MLPClassifier(hidden_layer_sizes=(876,876,512), activation='relu', learning_rate_init=args['lr'],
         #                     max_iter=args['epoch'], momentum=args['momentum'], shuffle=True)#用于单模型实现
         grid = MLPClassifier(hidden_layer_sizes=(876,876,512), activation='relu', max_iter=args['epoch'], shuffle=True)
         param_dist = {
                 'learning_rate_init':np.linspace(0.01*args['lr'],2*args['lr'],10),
-                'momentum':np.linspace(0.01*args['momentum'],2*args['momentum'],10),
+                'momentum':np.linspace(0.01*args['momentum'],args['momentum'],10),
                 }
         clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
     elif args['model_name'] == 'rdf':
@@ -66,12 +67,12 @@ def main(args):
                 }
         clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
     elif args['model_name'] == 'svm':
-        # clf = svm.SVC(C=args['c'])#用于单模型实现
+        # clf = svm.SVC(C=args['c'], kernel='rbf', )#用于单模型实现
         grid = svm.SVC(C=args['c'])
         param_dist = {
                 'kernel': ['rbf', 'linear', 'poly'],
-                'C': [0.001, 0.01, 1, 10, 100],
-                'gamma': [0.001, 0.01, 1, 10, 100]
+                'C': [0.001, 0.01, 1, 3],
+                'gamma': [1e-15, 1e-12, 1e-9]
                 }
         clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
     elif args['model_name'] == 'knn':
@@ -112,7 +113,7 @@ if __name__ == "__main__":
     parser.add_argument('--model_name',type=str,default='rdf',
                             choices=['mlp', 'rdf', 'xgb', 'svm', 'knn'])
     parser.add_argument('--data_name',type=str,default='origin_feature',
-                            choices=['origin_feature', 'origin_feature_copy'])
+                            choices=['origin_feature', 'feature_with_extra'])
     parser.add_argument('--train_size', type=float, default=0.8)
 
     parser.add_argument('--n_estimators', type=int, default=10)
