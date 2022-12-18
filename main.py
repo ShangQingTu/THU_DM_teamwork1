@@ -113,7 +113,7 @@ if __name__ == "__main__":
     parser.add_argument('--model_name',type=str,default='rdf',
                             choices=['mlp', 'rdf', 'xgb', 'svm', 'knn'])
     parser.add_argument('--data_name',type=str,default='origin_feature',
-                            choices=['origin_feature', 'feature_with_extra'])
+                            choices=['origin_feature', 'feature_plus_extra'])
     parser.add_argument('--train_size', type=float, default=0.8)
 
     parser.add_argument('--n_estimators', type=int, default=10)
