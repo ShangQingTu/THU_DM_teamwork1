@@ -93,7 +93,9 @@ def preprocess(args):
             labels.append(1)
         else:
             labels.append(0)
-    label_df = pd.DataFrame(labels, columns=['label'])
+    _label_df = pd.DataFrame(labels, columns=['label'])
+    label_df = pd.concat([_label_df, pd.DataFrame(shares, columns=['shares'])], axis=1, ignore_index=True)
+    label_df.columns = ['label', 'shares']
     label_df.to_csv("./data/label.csv", index=False)
     # 用爬虫获取html里的一些信息
     extra_features = []
