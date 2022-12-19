@@ -49,3 +49,20 @@ python preprocess.py --task preprocess
   # predict is [1, 0]
 ```
 
+# Training
+
+使用了手写完成的决策树分类模型（DT）以及对应机器学习库中的支持向量机（svm）、多层感知机（mlp）、xgboost和k近邻节点（knn）模型，一共五种算法。针对模型的部分可调参数使用了随机搜索算法探索了对应模型的可行最佳超参数取值，对应结果如下表所示
+
+| 模型      | 参数 | Accuracy | AUC_score | F1_score |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+| DT      |         |0.50032|0.50023|0.48851|
+| MLP     | hidden_layer_sizes=(876,876,512), activation='relu', learning_rate_init=0.001337, max_iter=100,momentum=0.504        |0.47888|0.5|0.64762|
+| SVM     | C=1.0, kernel='rbf'， gamma=1e-12        |0.47812|0.49904|0.64596|
+| Xgboost | 'n_estimators': 5, 'max_depth': 4, 'learning_rate': 0.2195       |0.65986|0.66187| 0.66642|
+| KNN     | n_neighbors=14, weights='distance'        |0.58431|0.58498|0.58055|
+
+通过增加额外的信息——作品发布的年月日时间以及作者（id编号），针对上述机器学习模型中性能最好的xgboost额外再次进行了训练和超参数的随机搜索，对应结果如下
+
+| 模型      | 参数 | Accuracy | AUC_score | F1_score |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+| Xgboost      | 'n_estimators': 5, 'max_depth': 3, 'learning_rate': 0.1147        |0.648379|0.64951|0.64816|
