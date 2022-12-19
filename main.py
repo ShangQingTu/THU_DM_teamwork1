@@ -49,14 +49,13 @@ def main(args):
                 }
         clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
     elif args['model_name'] == 'rdf':
-        clf = ClassifyModel(tree_num=args['n_estimators'])
-        # clf = RandomForestClassifier(n_estimators=args['n_estimators'])
-
-        # grid = ClassifyModel()
-        # param_dist = {
-        #         'n_estimators':range(int(0.5*args['n_estimators']),2*args['n_estimators'],4),
-        #         }
-        # clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
+        # clf = ClassifyModel(tree_num=args['n_estimators'])
+        clf = RandomForestClassifier(n_estimators=args['n_estimators'])
+        grid = ClassifyModel()
+        param_dist = {
+                'n_estimators':range(int(0.5*args['n_estimators']),2*args['n_estimators'],4),
+                }
+        clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
     elif args['model_name'] == 'xgb':
         # clf = XGBClassifier(n_estimators=args['n_estimators'], n_jobs=-1,  )#用于单模型实现
         grid = XGBClassifier(n_estimators=args['n_estimators'], n_jobs=-1,  )
@@ -90,7 +89,7 @@ def main(args):
     print(clf.best_params_)
     
     # import pdb;pdb.set_trace()
-    return mean_squared_error(Y_test,Y_result), roc_auc_score(Y_test, Y_result), f1_score(Y_test, Y_result)
+    return accuracy_score(Y_test,Y_result), roc_auc_score(Y_test, Y_result), f1_score(Y_test, Y_result)
     
 
 
