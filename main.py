@@ -6,11 +6,12 @@ import numpy as np
 import os
 from sklearn import svm
 from sklearn.model_selection import train_test_split
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import RandomizedSearchCV,GridSearchCV
 from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import *
+from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 import matplotlib.pyplot as plt
 
@@ -22,7 +23,7 @@ import torch
 from model.RadomForest import ClassifyModel
 #用于分类模型
 def main(args):
-
+    std = StandardScaler()
 
     data_name = args['data_name'] 
     data = pd.read_csv('data/'+data_name + '.csv', encoding='utf-8')
@@ -32,6 +33,9 @@ def main(args):
     train_id = int(len(data_X)*args['train_size'])
     X_train = data_X[:train_id]
     X_test = data_X[train_id:]
+    
+    X_train = pd.DataFrame(std.fit_transform(X_train))
+    X_test = pd.DataFrame(std.transform(X_test))
 
     label = pd.read_csv('data/label.csv', encoding='utf-8')
     # data_Y = np.array(label)
@@ -44,18 +48,18 @@ def main(args):
         #                     max_iter=args['epoch'], momentum=args['momentum'], shuffle=True)#用于单模型实现
         grid = MLPClassifier(hidden_layer_sizes=(876,876,512), activation='relu', max_iter=args['epoch'], shuffle=True)
         param_dist = {
-                'learning_rate_init':np.linspace(0.01*args['lr'],2*args['lr'],10),
-                'momentum':np.linspace(0.01*args['momentum'],args['momentum'],10),
+                'learning_rate_init':np.linspace(0.01*args['lr'],2*args['lr'],4),
+                'momentum':np.linspace(0.01*args['momentum'],args['momentum'],4),
                 }
         clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
     elif args['model_name'] == 'rdf':
-        # clf = ClassifyModel(tree_num=args['n_estimators'])
-        clf = RandomForestClassifier(n_estimators=args['n_estimators'])
-        grid = ClassifyModel()
-        param_dist = {
-                'n_estimators':range(int(0.5*args['n_estimators']),2*args['n_estimators'],4),
-                }
-        clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
+        clf = ClassifyModel(tree_num=args['n_estimators'])
+        # clf = RandomForestClassifier(n_estimators=args['n_estimators'])
+        # grid = ClassifyModel()
+        # param_dist = {
+        #         'n_estimators':range(int(0.5*args['n_estimators']),2*args['n_estimators'],4),
+        #         }
+        # clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
     elif args['model_name'] == 'xgb':
         # clf = XGBClassifier(n_estimators=args['n_estimators'], n_jobs=-1,  )#用于单模型实现
         grid = XGBClassifier(n_estimators=args['n_estimators'], n_jobs=-1,  )
@@ -71,7 +75,7 @@ def main(args):
         param_dist = {
                 'kernel': ['rbf', 'linear', 'poly'],
                 'C': [0.001, 0.01, 1, 3],
-                'gamma': [1e-15, 1e-12, 1e-9]
+                'gamma': [0.01, 0.1, 1]
                 }
         clf = RandomizedSearchCV(grid, param_dist, n_jobs = -1)
     elif args['model_name'] == 'knn':
@@ -85,6 +89,8 @@ def main(args):
         
     clf.fit(X_train, Y_train)
     Y_result = clf.predict(X_test)
+    print(accuracy_score(Y_test,Y_result), roc_auc_score(Y_test, Y_result), f1_score(Y_test, Y_result))
+    import pdb;pdb.set_trace()
     print(clf.best_estimator_)
     print(clf.best_params_)
     
