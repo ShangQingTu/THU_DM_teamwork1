@@ -57,12 +57,12 @@ python preprocess.py --task preprocess
 | ----------- | ----------- | ----------- | ----------- | ----------- |
 | DT      |         |0.50032|0.50023|0.48851|
 | MLP     | hidden_layer_sizes=(876,876,512), activation='relu', learning_rate_init=0.001337, max_iter=100,momentum=0.504        |0.47888|0.5|0.64762|
-| SVM     | C=1.0, kernel='rbf'， gamma=1e-12        |0.47812|0.49904|0.64596|
-| Xgboost | 'n_estimators': 5, 'max_depth': 4, 'learning_rate': 0.2195       |0.65986|0.66187| 0.66642|
-| KNN     | n_neighbors=14, weights='distance'        |0.58431|0.58498|0.58055|
+| SVM     | C=1.0, kernel='rbf'， gamma=0.01        |0.65759|0.65866|0.65672|
+| Xgboost | 'n_estimators': 13, 'max_depth': 3, 'learning_rate': 0.1147       |0.65923|0.66129| 0.66617|
+| KNN     | n_neighbors=14, weights='uniform'        |0.63564|0.63252|0.59487|
 
 通过增加额外的信息——作品发布的年月日时间以及作者（id编号），针对上述机器学习模型中性能最好的xgboost额外再次进行了训练和超参数的随机搜索，对应结果如下
 
 | 模型      | 参数 | Accuracy | AUC_score | F1_score |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| Xgboost      | 'n_estimators': 5, 'max_depth': 3, 'learning_rate': 0.1147        |0.648379|0.64951|0.64816|
+| Xgboost      | 'n_estimators': 5, 'max_depth': 3, 'learning_rate': 0.1147        |0.66465|0.66523|0.65984|
