@@ -53,16 +53,25 @@ python preprocess.py --task preprocess
 
 使用了手写完成的决策树分类模型（DT）以及对应机器学习库中的支持向量机（svm）、多层感知机（mlp）、xgboost和k近邻节点（knn）模型，一共五种算法。针对模型的部分可调参数使用了随机搜索算法探索了对应模型的可行最佳超参数取值，对应结果如下表所示
 
-| 模型      | 参数 | Accuracy | AUC_score | F1_score |
-| ----------- | ----------- | ----------- | ----------- | ----------- |
+| 模型  | 参数 | Accuracy | AUC_score | F1_score |
+| ------------ | ----------- | ----------- | ----------- | ----------- |
 | DT      |         |0.50032|0.50023|0.48851|
 | MLP     | hidden_layer_sizes=(876,876,512), activation='relu', learning_rate_init=0.001337, max_iter=100,momentum=0.504        |0.47888|0.5|0.64762|
 | SVM     | C=1.0, kernel='rbf'， gamma=0.01        |0.65759|0.65866|0.65672|
 | Xgboost | 'n_estimators': 13, 'max_depth': 3, 'learning_rate': 0.1147       |0.65923|0.66129| 0.66617|
 | KNN     | n_neighbors=14, weights='uniform'        |0.63564|0.63252|0.59487|
+| ResNet  | n_block = 4, d_main = 64, d_hidden = 128, dropout_first = 0.3, dropout_second = 0.0 | 0.66200 | 0.66301 | 0.66067 |
+| FT-Transformer  | n_block = 4, d_token = 64, ffn_d_hidden = 128, attention_dropout = 0.2, ffn_dropout = 0.3, residual_dropout = 0.0 | 0.67070 | 0.66949 | 0.65088 |
+| ResNet (ensemble)  | n_block = 4, d_main = 64, d_hidden = 128, dropout_first = 0.3, dropout_second = 0.0 | 0.66553 | 0.66626 | 0.66190 |
+| FT-Transformer (ensemble) | n_block = 4, d_token = 64, ffn_d_hidden = 128, attention_dropout = 0.2, ffn_dropout = 0.3, residual_dropout = 0.0 | 0.67196 | 0.67053 | 0.65026 |
+
 
 通过增加额外的信息——作品发布的年月日时间以及作者（id编号），针对上述机器学习模型中性能最好的xgboost额外再次进行了训练和超参数的随机搜索，对应结果如下
 
 | 模型      | 参数 | Accuracy | AUC_score | F1_score |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
 | Xgboost      | 'n_estimators': 5, 'max_depth': 3, 'learning_rate': 0.1147        |0.66465|0.66523|0.65984|
+| ResNet  | n_block = 4, d_main = 64, d_hidden = 128, dropout_first = 0.3, dropout_second = 0.0 | 0.65468 | 0.65703 | 0.66404 |
+| FT-Transformer  | n_block = 4, d_token = 64, ffn_d_hidden = 128, attention_dropout = 0.2, ffn_dropout = 0.3, residual_dropout = 0.0 | 0.66906 | 0.66967 | 0.66445 |
+| ResNet (ensemble)  | n_block = 4, d_main = 64, d_hidden = 128, dropout_first = 0.3, dropout_second = 0.0 | 0.65985 | 0.66221 | 0.66903 |
+| FT-Transformer (ensemble) | n_block = 4, d_token = 64, ffn_d_hidden = 128, attention_dropout = 0.2, ffn_dropout = 0.3, residual_dropout = 0.0 | 0.67196 | 0.67322 | 0.67245 |
