@@ -56,7 +56,7 @@ python preprocess.py --task preprocess
 | 模型  | 参数 | Accuracy | AUC_score | F1_score |
 | ------------ | ----------- | ----------- | ----------- | ----------- |
 | DT      |         |0.50032|0.50023|0.48851|
-| MLP     | hidden_layer_sizes=(876,876,512), activation='relu', learning_rate_init=0.001337, max_iter=100,momentum=0.504        |0.47888|0.5|0.64762|
+| MLP     | hidden_layer_sizes=(876,876,512), activation='relu', learning_rate_init=1e-5, max_iter=100,momentum=0.306        |0.64321|0.64287|0.63024|
 | SVM     | C=1.0, kernel='rbf'， gamma=0.01        |0.65759|0.65866|0.65672|
 | Xgboost | 'n_estimators': 13, 'max_depth': 3, 'learning_rate': 0.1147       |0.65923|0.66129| 0.66617|
 | KNN     | n_neighbors=14, weights='uniform'        |0.63564|0.63252|0.59487|
