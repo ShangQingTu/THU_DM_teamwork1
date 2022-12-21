@@ -90,7 +90,6 @@ def main(args):
     clf.fit(X_train, Y_train)
     Y_result = clf.predict(X_test)
     print(accuracy_score(Y_test,Y_result), roc_auc_score(Y_test, Y_result), f1_score(Y_test, Y_result))
-    import pdb;pdb.set_trace()
     print(clf.best_estimator_)
     print(clf.best_params_)
     
