@@ -168,13 +168,34 @@ def merge():
 
 
 def analyse():
-    pass
+    data = pd.read_csv('data/origin_feature.csv', encoding='utf-8')
+    data_X = pd.DataFrame(data)
+    train_id = int(len(data_X) * 0.8)
+    X_train = data_X[:train_id]
+    X_test = data_X[train_id:]
+    class_feature_names = []
+    print(X_train.columns.values)
+    for i, feature_name in tqdm(enumerate(X_train.columns.values)):
+        values = []
+        for v in X_train[feature_name]:
+            if v not in values:
+                values.append(v)
+        is_class_feature = True
+        for v in X_test[feature_name]:
+            if v not in values:
+                is_class_feature = False
+                break
+        if is_class_feature:
+            class_feature_names.append(i)
+    print(class_feature_names)
+    # ['num_keywords', 'data_channel_is_lifestyle', 'data_channel_is_entertainment', 'data_channel_is_bus', 'data_channel_is_socmed', 'data_channel_is_tech', 'data_channel_is_world', 'kw_min_min', 'weekday_is_monday', 'weekday_is_tuesday', 'weekday_is_wednesday', 'weekday_is_thursday', 'weekday_is_friday', 'weekday_is_saturday', 'weekday_is_sunday', 'is_weekend', 'min_positive_polarity', 'max_positive_polarity', 'max_negative_polarity']
+    # [10, 11, 12, 13, 14, 15, 16, 17, 29, 30, 31, 32, 33, 34, 35, 36, 49, 50, 53]
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Preprocess and analyse data for news popularity')
     parser.add_argument('--restart', help='重启的位置', default=12347)
-    parser.add_argument('--task', help='任务类型', default='preprocess',
+    parser.add_argument('--task', help='任务类型', default='analyse',
                         choices=['preprocess', 'merge', 'analyse'])
     args = parser.parse_args()
     if args.task == 'preprocess':

@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 USE_ID3 = True
+class_feature_names = [10, 11, 12, 13, 14, 15, 16, 17, 29, 30, 31, 32, 33, 34, 35, 36, 49, 50, 53]
 
 
 class DataSet():
@@ -69,7 +70,9 @@ class ClassifyModel():
           """
         self.model = RadomForest(tree_num)
 
-    def fit(self, X_train, Y_train):
+    def fit(self, _X_train, Y_train):
+        print(_X_train.columns.values)
+        X_train = _X_train[class_feature_names]
         i2name_x = []
         for i, name in enumerate(X_train.columns.values):
             i2name_x.append(name)
@@ -81,7 +84,8 @@ class ClassifyModel():
         dataSet = DataSet(X_train, Y_train, i2name_x, i2name_y)
         self.train(dataSet)
 
-    def predict(self, X_test):
+    def predict(self, _X_test):
+        X_test = _X_test[class_feature_names]
         i2name_x = []
         for i, name in enumerate(X_test.columns.values):
             i2name_x.append(name)
